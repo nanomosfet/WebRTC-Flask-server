@@ -49,5 +49,7 @@ server {
 
 }
 ```
-6. Run the webRTCserver.py file `python webRTCserver.py` Should be hosted on port 8080 and then Nginx will be using that as the `proxy_pass`
-7. Last word I should mention that this has no stun and turn server implementation, only using googles stun server which is not meant for production. More info on [WebRTC in the real world](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/)
+6. Change directory into root file of repository. run `pip install .` to install all needed packages.
+7. Run the webRTCserver.py file `python webRTCserver.py` Should be hosted on port 8080 and then Nginx will be using that as the `proxy_pass`
+
+8. Last word I should mention that this has no stun and turn server implementation, only using googles stun server which is not meant for production. More info on [WebRTC in the real world](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/)
