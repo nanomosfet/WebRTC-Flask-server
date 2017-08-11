@@ -18,6 +18,9 @@
     <video id="localVideo" autoplay muted></video>
     <video id="remoteVideo" autoplay></video>
   </div>
+  <div id="chatlog"></div>
+  <textarea id="text" name="text"></textarea>
+  <button id="sendText" onclick="sendData()">Send</button>
 
   <script src="{{url_for('static', filename='js/lib/socket.io.js')}}"></script>
   <script src="{{url_for('static', filename='js/lib/adapter.js')}}"></script>

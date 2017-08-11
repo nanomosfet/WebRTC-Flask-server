@@ -7,6 +7,10 @@ var localStream;
 var pc;
 var remoteStream;
 var turnReady;
+var receiveChannel;
+var sendChannel;
+var sendText = document.querySelector("#text");
+var chatlog = document.querySelector('#chatlog');
 
 var pcConfig = {
   'iceServers': [{
@@ -147,15 +151,30 @@ window.onbeforeunload = function() {
 function createPeerConnection() {
   try {
     pc = new RTCPeerConnection(pcConfig);
+    sendChannel = pc.createDataChannel('chat', null);
     pc.onicecandidate = handleIceCandidate;
     pc.onaddstream = handleRemoteStreamAdded;
     pc.onremovestream = handleRemoteStreamRemoved;
+    pc.ondatachannel = handleChannelCallback;
+
     console.log('Created RTCPeerConnnection');
   } catch (e) {
     console.log('Failed to create PeerConnection, exception: ' + e.message);
     alert('Cannot create RTCPeerConnection object.');
     return;
   }
+}
+
+function handleChannelCallback(event) {
+  receiveChannel = event.channel;
+  receiveChannel.onmessage = onReceiveMessageCallback;
+}
+
+function onReceiveMessageCallback(event) {
+  var text = document.createElement("P");
+  text.appendChild(document.createTextNode(event.data))
+
+  chatlog.appendChild(text);
 }
 
 function handleIceCandidate(event) {
@@ -170,6 +189,15 @@ function handleIceCandidate(event) {
   } else {
     console.log('End of candidates.');
   }
+}
+
+function sendData() {
+  var text = document.createElement("P");
+  text.appendChild(document.createTextNode(sendText.value));
+  chatlog.appendChild(text);
+  sendChannel.send(sendText.value);
+
+  sendText.value = '';
 }
 
 function handleRemoteStreamAdded(event) {
@@ -204,7 +232,7 @@ function setLocalAndSendMessage(sessionDescription) {
 }
 
 function onCreateSessionDescriptionError(error) {
-  trace('Failed to create session description: ' + error.toString());
+  //trace('Failed to create session description: ' + error.toString());
 }
 
 function requestTurn(turnURL) {
