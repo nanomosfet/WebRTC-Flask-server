@@ -26,9 +26,9 @@ var sdpConstraints = {
 
 /////////////////////////////////////////////
 
-var room = 'foo';
+//room = 'foo';
 // Could prompt for room name:
-// room = prompt('Enter room name:');
+var room = prompt('Enter room name:');
 
 var socket = io.connect();
 
@@ -143,7 +143,8 @@ function maybeStart() {
 }
 
 window.onbeforeunload = function() {
-  sendMessage('bye');
+  socket.emit('disconnect', room)
+  console.log("sending disconnect")
 };
 
 /////////////////////////////////////////////////////////
@@ -196,7 +197,6 @@ function sendData() {
   text.appendChild(document.createTextNode(sendText.value));
   chatlog.appendChild(text);
   sendChannel.send(sendText.value);
-
   sendText.value = '';
 }
 

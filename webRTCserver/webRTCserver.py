@@ -6,7 +6,7 @@ import eventlet.wsgi
 sio = socketio.Server()
 app = Flask(__name__)
 
-connected_particpants = []
+connected_particpants = {}
 
 @app.route('/')
 def index():
@@ -20,13 +20,22 @@ def messgage(sid, data):
 @sio.on('disconnect', namespace='/')
 def disconnect(sid):
     print 'sid disconnect'
-    connected_particpants.remove(sid)
+    for room in connected_particpants:
+        try:
+            room.remove(sid)
+        except:
+            pass
+    
+    connected_particpants[room].remove(sid)
 
 @sio.on('create or join', namespace='/')
 def create_or_join(sid, data):
     sio.enter_room(sid, data)
-    connected_particpants.append(sid)
-    numClients = len(connected_particpants)
+    try:
+        connected_particpants[data].append(sid)
+    except KeyError:
+        connected_particpants[data] = [sid]
+    numClients = len(connected_particpants[data])
     if numClients == 1:
         sio.emit('created', data)
     elif numClients > 2:
@@ -34,7 +43,7 @@ def create_or_join(sid, data):
     elif numClients == 2:
         sio.emit('joined')
         sio.emit('join')
-    print (sid, data, len(connected_particpants))
+    print (sid, data, len(connected_particpants[data]))
 
 @app.route('/<room>')
 def room(room):
