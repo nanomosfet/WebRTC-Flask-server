@@ -26,9 +26,11 @@ def messgage(sid, data):
 def disconnect(sid):
     write_log("Received Disconnect message from %s" % sid)
     for room, clients in connected_particpants.iteritems():
-        clients.remove(sid)
-        write_log("Remove %s from %s \n list of left participants is %s" %(sid, room, clients))
-
+        try:
+            clients.remove(sid)
+            write_log("Removed %s from %s \n list of left participants is %s" %(sid, room, clients))
+        except ValueError:
+            write_log("Remove %s from %s \n list of left participants is %s has failed" %(sid, room, clients))
 
 @sio.on('create or join', namespace='/')
 def create_or_join(sid, data):
