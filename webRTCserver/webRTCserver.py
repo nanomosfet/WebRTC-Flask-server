@@ -8,6 +8,10 @@ app = Flask(__name__)
 
 connected_particpants = {}
 
+def write_log(s):    
+    with open('logfile.out', 'a+') as f:
+        f.write('time: %s Action: %s \n' % (str(datetime.datetime.now()), s))
+
 @app.route('/')
 def index():
     """Serve index page"""
@@ -23,10 +27,10 @@ def disconnect(sid):
     for room in connected_particpants:
         try:
             room.remove(sid)
+            write_log("Remove %s from %s" %(sid, room))
         except:
             pass
-    
-    connected_particpants[room].remove(sid)
+
 
 @sio.on('create or join', namespace='/')
 def create_or_join(sid, data):
