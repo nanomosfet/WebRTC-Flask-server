@@ -23,7 +23,7 @@ def messgage(sid, data):
 
 @sio.on('disconnect', namespace='/')
 def disconnect(sid):
-    print 'sid disconnect'
+    write_log("Received Disconnect message from %s" % sid)
     for room in connected_particpants:
         try:
             room.remove(sid)
