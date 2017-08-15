@@ -16,7 +16,7 @@ def write_log(s):
 @app.route('/')
 def index():
     """Serve index page"""
-    return render_template('index.html')
+    return render_template('index.html', room='default')
 
 @sio.on('message', namespace='/')
 def messgage(sid, data):
@@ -51,7 +51,7 @@ def create_or_join(sid, data):
 
 @app.route('/<room>')
 def room(room):
-    return room
+    return render_template('index.html', room=room)
 
 if __name__ == '__main__':
     app = socketio.Middleware(sio, app)

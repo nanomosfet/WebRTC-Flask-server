@@ -28,7 +28,7 @@ var sdpConstraints = {
 
 //room = 'foo';
 // Could prompt for room name:
-var room = prompt('Enter room name:');
+// var room = prompt('Enter room name:');
 
 var socket = io.connect();
 
